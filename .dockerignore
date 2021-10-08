@@ -1,0 +1,17 @@
+.DS_Store
+Desktop.ini
+.idea
+*~
+*.swp
+._*
+*.pyc
+Thumbs.db
+.Spotlight-V100
+.Trashes
+.env
+.svn
+.cvs
+.travis
+.git*
+.*.yml
+CODE_OF_CONDUCT.md

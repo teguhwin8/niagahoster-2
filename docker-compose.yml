@@ -1,0 +1,53 @@
+version: "3.9"
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    container_name: web_container
+    volumes:
+      - ./web:/var/www/html
+    ports:
+      - 80:80
+    networks:
+      - app_network
+
+  boxbilling_app:
+    build:
+      context: .
+      dockerfile: Dockerfile.boxbilling
+    container_name: boxbilling_app_container
+    environment:
+      DB_HOST: db
+      DB_NAME: boxbilling
+      DB_USER: root
+      DB_PASS: 12345
+    volumes:
+      - ./boxbilling:/var/www/html
+    ports:
+      - "8004:8080"
+    networks:
+      - app_network
+    depends_on:
+      - db
+
+  db:
+    image: mysql:5.7.35
+    container_name: db_container
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: boxbilling
+      MYSQL_ROOT_PASSWORD: 12345
+    networks:
+      - app_network
+    volumes:
+      - ./mysql/dump:/docker-entrypoint-initdb.d
+      - ./mysql/data:/var/lib/mysql
+
+networks:
+  app_network:
+    name: app_network
